@@ -1,22 +1,27 @@
 "use client"
 
 import Link from "next/link";
+import { toast } from "sonner";
 import { useQuery } from "convex/react";
+import { useMutation } from "convex/react";
+import { useRouter } from "next/navigation";
 import { truncateString } from "@/lib/utils";
 import { api } from "@/convex/_generated/api";
 import { useUser, useClerk, SignedIn, SignedOut } from "@clerk/nextjs";
 
 import { Button } from "@/components/ui/button";
-import { CircleUserRound, Settings, LogOut } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { CircleUserRound, Settings, LogOut , Shirt, SquareArrowOutUpRight, Trash2 } from "lucide-react";
+import { ContextMenu, ContextMenuTrigger, ContextMenuContent, ContextMenuItem, ContextMenuShortcut } from "@/components/ui/context-menu";
 import { Sidebar, SidebarHeader, SidebarFooter, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuGroup, DropdownMenuShortcut, DropdownMenuSeparator, DropdownMenuLabel } from "@/components/ui/dropdown-menu";
 
 export function CustomSidebar() {
   const user = useUser();
   const clerk = useClerk();
-  const chats = useQuery(api.chats.get.get, {});
+  const router = useRouter();
+  const chats = useQuery(api.chats.get.getAllChats, { userId: user.user?.id || "" });
+  const deleteChat = useMutation(api.chats.delete.deleteChat);
 
   return (
     <Sidebar>
@@ -29,17 +34,38 @@ export function CustomSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {chats?.map(({ _id, title}) => {
-                return <SidebarMenuItem key={_id}>
-                  <SidebarMenuButton asChild>
-                    <Link href={`/chat/${_id}`}>{truncateString(title, 35)}</Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              })}
+                return <ContextMenu key={_id}>
+                  <ContextMenuTrigger asChild>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton asChild>
+                        <Link href={`/chat/${_id}`}>{truncateString(title, 35)}</Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  </ContextMenuTrigger>
+                  <ContextMenuContent className="w-28">
+                    <ContextMenuItem onClick={() => {
+                      navigator.clipboard.writeText(`${window.location.origin}/chat/${_id}`)
+                      toast.info("Copied link to clipboard")
+                    }}>
+                      Share
+                      <ContextMenuShortcut>
+                        <SquareArrowOutUpRight className="size-4" />
+                      </ContextMenuShortcut>
+                    </ContextMenuItem>
+                    <ContextMenuItem className="text-red-500 focus:text-red-500" onClick={() => deleteChat({ _id })}>
+                      Delete
+                      <ContextMenuShortcut>
+                        <Trash2 className="size-4 stroke-red-500" />
+                      </ContextMenuShortcut>
+                    </ContextMenuItem>
+                  </ContextMenuContent>
+                </ContextMenu>}
+              )}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter>
+      <SidebarFooter className="hover:cursor-pointer">
         <SignedIn>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -62,6 +88,12 @@ export function CustomSidebar() {
                   Profile
                   <DropdownMenuShortcut>
                     <CircleUserRound className="size-4" />
+                  </DropdownMenuShortcut>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => router.push("/wardrobe")}>
+                  Wardrobe
+                  <DropdownMenuShortcut>
+                    <Shirt className="size-4" />
                   </DropdownMenuShortcut>
                 </DropdownMenuItem>
                 <DropdownMenuItem>

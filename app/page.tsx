@@ -38,9 +38,6 @@ export default function Main() {
               />
 
               <div className="flex absolute bottom-2 right-2">
-                <Button size="icon" variant="link" onClick={handleSubmit}>
-                  <Plus />
-                </Button>
                 <Button size="icon" variant="link" onClick={() => router.push("/wardrobe")}>
                   <Shirt />
                 </Button>

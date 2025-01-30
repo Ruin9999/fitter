@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { ConvexClientProvider } from "@/components/providers/convex-client-provider";
 
+import { Toaster } from "@/components/ui/sonner";
 import { CustomSidebar } from "@/components/layout/sidebar";
 
 const pacifico = Pacifico({
@@ -35,6 +36,7 @@ export default function RootLayout({
           {/* <SidebarTrigger className="size-8"/> */}
           {children}
         </SidebarProvider>
+        <Toaster />
       </body>
     </html>
     </TooltipProvider>
