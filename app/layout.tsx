@@ -29,11 +29,11 @@ export default function RootLayout({
     <ClerkProvider>
     <ConvexClientProvider>
     <TooltipProvider delayDuration={100}>
-    <html lang="en">
+    <html lang="en" className="pr-10">
       <body className={`${pacifico.variable} antialiased`}>
         <SidebarProvider>
           <CustomSidebar />
-          {/* <SidebarTrigger className="size-8"/> */}
+          <SidebarTrigger />
           {children}
         </SidebarProvider>
         <Toaster />

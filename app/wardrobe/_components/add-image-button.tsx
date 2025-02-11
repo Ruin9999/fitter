@@ -24,6 +24,8 @@ export function AddImageButton() {
         const { storageId } = await res.data
         await uploadImage({ name: file.name, userId: user?.id || "", storageId });
       });
+
+      toast.success("Image uploaded!");
     } catch (e) {
       console.error(e);
       toast.error("Failed to upload image.");
@@ -44,7 +46,7 @@ export function AddImageButton() {
     "items-center",
     "justify-center",
     "border-2",
-    "border-slate-300",
+    "border-slate-400",
     "opacity-60",
     "hover:opacity-100",
     "border-dashed",
@@ -69,7 +71,7 @@ export function AddImageButton() {
         accept="image/*" 
         onChange={handleFileChange} 
       />
-      <CirclePlus className="size-8 stroke-slate-300 stroke-1" />
+      <CirclePlus className="size-8 stroke-slate-400 stroke-1" />
     </button>
   );
 }

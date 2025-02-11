@@ -11,7 +11,9 @@ import { useUser, useClerk, SignedIn, SignedOut } from "@clerk/nextjs";
 
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { CircleUserRound, Settings, LogOut , Shirt, SquareArrowOutUpRight, Trash2 } from "lucide-react";
+import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
+import { CircleUserRound, LogOut , Shirt, SquareArrowOutUpRight, Trash2 } from "lucide-react";
+import { Dialog, DialogHeader, DialogTitle, DialogDescription, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { ContextMenu, ContextMenuTrigger, ContextMenuContent, ContextMenuItem, ContextMenuShortcut } from "@/components/ui/context-menu";
 import { Sidebar, SidebarHeader, SidebarFooter, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuGroup, DropdownMenuShortcut, DropdownMenuSeparator, DropdownMenuLabel } from "@/components/ui/dropdown-menu";
@@ -26,6 +28,7 @@ export function CustomSidebar() {
   return (
     <Sidebar>
       <SidebarHeader>
+        <p className="sr-only">fitter</p>
         <Link href="/" className="text-3xl text-center py-2 font-pacifico">fitter</Link>
       </SidebarHeader>
       <SidebarContent>
@@ -34,32 +37,37 @@ export function CustomSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {chats?.map(({ _id, title}) => {
-                return <ContextMenu key={_id}>
-                  <ContextMenuTrigger asChild>
-                    <SidebarMenuItem>
-                      <SidebarMenuButton asChild>
-                        <Link href={`/chat/${_id}`}>{truncateString(title, 35)}</Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  </ContextMenuTrigger>
-                  <ContextMenuContent className="w-28">
-                    <ContextMenuItem onClick={() => {
-                      navigator.clipboard.writeText(`${window.location.origin}/chat/${_id}`)
-                      toast.info("Copied link to clipboard")
-                    }}>
-                      Share
-                      <ContextMenuShortcut>
-                        <SquareArrowOutUpRight className="size-4" />
-                      </ContextMenuShortcut>
-                    </ContextMenuItem>
-                    <ContextMenuItem className="text-red-500 focus:text-red-500" onClick={() => deleteChat({ _id })}>
-                      Delete
-                      <ContextMenuShortcut>
-                        <Trash2 className="size-4 stroke-red-500" />
-                      </ContextMenuShortcut>
-                    </ContextMenuItem>
-                  </ContextMenuContent>
-                </ContextMenu>}
+                return <Tooltip key={_id}>
+                  <TooltipTrigger>
+                    <ContextMenu>
+                      <ContextMenuTrigger asChild>
+                        <SidebarMenuItem>
+                          <SidebarMenuButton asChild>
+                            <Link href={`/chat/${_id}`}>{truncateString(title, 30)}</Link>
+                          </SidebarMenuButton>
+                        </SidebarMenuItem>
+                      </ContextMenuTrigger>
+                      <ContextMenuContent className="w-28">
+                        <ContextMenuItem onClick={() => {
+                          navigator.clipboard.writeText(`${window.location.origin}/chat/${_id}`)
+                          toast.info("Copied link to clipboard")
+                        }}>
+                          Share
+                          <ContextMenuShortcut>
+                            <SquareArrowOutUpRight className="size-4" />
+                          </ContextMenuShortcut>
+                        </ContextMenuItem>
+                        <ContextMenuItem className="text-red-500 focus:text-red-500" onClick={() => deleteChat({ _id })}>
+                          Delete
+                          <ContextMenuShortcut>
+                            <Trash2 className="size-4 stroke-red-500" />
+                          </ContextMenuShortcut>
+                        </ContextMenuItem>
+                      </ContextMenuContent>
+                    </ContextMenu>
+                  </TooltipTrigger>
+                  <TooltipContent side="right">{title}</TooltipContent>
+                </Tooltip>}
               )}
             </SidebarMenu>
           </SidebarGroupContent>
@@ -84,22 +92,10 @@ export function CustomSidebar() {
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
-                <DropdownMenuItem>
-                  Profile
-                  <DropdownMenuShortcut>
-                    <CircleUserRound className="size-4" />
-                  </DropdownMenuShortcut>
-                </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => router.push("/wardrobe")}>
                   Wardrobe
                   <DropdownMenuShortcut>
                     <Shirt className="size-4" />
-                  </DropdownMenuShortcut>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  Settings
-                  <DropdownMenuShortcut>
-                    <Settings className="size-4" />
                   </DropdownMenuShortcut>
                 </DropdownMenuItem>
               </DropdownMenuGroup>

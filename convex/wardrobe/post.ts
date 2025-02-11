@@ -10,6 +10,8 @@ Given the attached image of a single clothing item, describe it as thoroughly ye
 Include the type of garment, color, pattern, fabric, notable design features, and any apparent style or intended use. 
 Avoid guessing the brand or unrelated details. 
 Provide just enough information so someone could envision the clothing item clearly from your description.
+
+Your responses should be something like: "Black, slightly cropped, smooth, harley davidson logo on the front, leather jacket." 
 `;
 
 export const uploadImage = action({

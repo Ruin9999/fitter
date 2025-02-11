@@ -5,20 +5,27 @@ export default defineSchema({
   chats: defineTable({
     userId: v.string(),
     title: v.string(),
-    description: v.string(),
-    // images: v.array(v.string()), // We don't exactly need to have a reference here since `outfits` already has a many-to-one reference.
+    prompt: v.string(),
   }).index("by_userId", ["userId"]),
   clothes: defineTable({
-    storageId: v.id("_storage"),
     userId: v.string(),
-    name: v.string(),
+    storageId: v.string(),
     description: v.string(),
     url: v.string(),
+    name: v.optional(v.string()),
   }).index("by_userId", ["userId"]),
   outfits: defineTable({
     userId: v.string(),
     chatId: v.id("chats"),
-    storageId: v.id("_storage"),
+    storageId: v.string(),
     url: v.string(),
+    explanation: v.optional(v.string()),
+    description: v.optional(v.string()),
+    recommendations: v.optional(v.string()),
   }).index("by_chatId", ["chatId"]),
+  poses: defineTable({
+    userId: v.string(),
+    storageId: v.string(),
+    url: v.string(),
+  }).index("by_userId", ["userId"]),
 });

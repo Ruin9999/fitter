@@ -4,10 +4,10 @@ import { internalMutation } from "../_generated/server"
 export const internalUploadImage = internalMutation({
   args: {
     userId: v.string(),
+    storageId: v.string(),
     url: v.string(),
-    name: v.string(),
+    name: v.optional(v.string()),
     description: v.string(),
-    storageId: v.id("_storage"),
   },
   handler: async (ctx, args) =>{
     return await ctx.db.insert("clothes", {

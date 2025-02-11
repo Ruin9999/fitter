@@ -16,6 +16,13 @@ import type {
 import type * as chats_delete from "../chats/delete.js";
 import type * as chats_get from "../chats/get.js";
 import type * as chats_post from "../chats/post.js";
+import type * as chats_utils from "../chats/utils.js";
+import type * as outfits_get from "../outfits/get.js";
+import type * as outfits_post from "../outfits/post.js";
+import type * as poses_get from "../poses/get.js";
+import type * as poses_post from "../poses/post.js";
+import type * as storage_delete from "../storage/delete.js";
+import type * as storage_get from "../storage/get.js";
 import type * as storage_post from "../storage/post.js";
 import type * as wardrobe_delete from "../wardrobe/delete.js";
 import type * as wardrobe_get from "../wardrobe/get.js";
@@ -34,6 +41,13 @@ declare const fullApi: ApiFromModules<{
   "chats/delete": typeof chats_delete;
   "chats/get": typeof chats_get;
   "chats/post": typeof chats_post;
+  "chats/utils": typeof chats_utils;
+  "outfits/get": typeof outfits_get;
+  "outfits/post": typeof outfits_post;
+  "poses/get": typeof poses_get;
+  "poses/post": typeof poses_post;
+  "storage/delete": typeof storage_delete;
+  "storage/get": typeof storage_get;
   "storage/post": typeof storage_post;
   "wardrobe/delete": typeof wardrobe_delete;
   "wardrobe/get": typeof wardrobe_get;
