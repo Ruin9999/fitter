@@ -7,34 +7,26 @@ import { action, internalMutation, internalAction } from "../_generated/server"
 import { ChatTitleDescritionResponse, OutfitRecommendationResponse } from "@/lib/types"
 
 const openai = new OpenAI();
-// const assistantPrompt = `
-// You are a personal stylist, I'll provide you with:
-// 1) A detailed list of my clothing items (descriptions).
-// 2) A specific 'vibe' or style I want to achieve.
-// Using only the items from my clothing items, propose several complete outfit combinations that perfectly match the requested vibe.
-// For each outfit:
-//   - Briefly explain why it sutis the vibe.
-//   - Highlight any key details (e.g. color, pattern, texture) that I can add to improve the outfit.
-//   - Ensure all recommentations fit the mood or style I've described and reflect a cohesive, fashionable look."
-// Also give me an extremely brief description of the outfit. The outfit description should be in the format: "Black, slightly cropped, smooth, harley davidson logo on the front, leather jacket."
-// You can add more details if you want. Always include a full outfit description from head to legs.
-
-// If I have no items in my wardrbe, come up with a creative outfit that fits the vibe.
-// `;
-
 const assistantPrompt = `
 You are a personal stylist, I'll provide you with:
 1) A detailed list of my clothing items (descriptions).
 2) A description of what I want to achieve for the outfit.
+
+Only use items from my wardrobe to propose several complete outfit combinations that perfectly match the requested vibe.
+Only when I have NO items in my wardrobe, come up with a creative outfit that fits the vibe.
+
 Using only the items from my clothing items, propose several complete outfit combinations that perfectly match the requested vibe.
 For each outfit:
-  - Briefly explain why it sutis the vibe.
+  - Briefly explain why it suits the vibe.
   - Highlight any key details (e.g. color, pattern, texture) that I can add to improve the outfit.
-  - Ensure all recommentations fit the mood or style I've described and reflect a cohesive, fashionable look."
-Also give me an extremely brief description of the outfit.
+  - Ensure all reccommendations fit the mood or style I've described and reflect a cohesive, fashionable look.
+
+Also give me an extremely brief yet detailed description of the outfit. Make sure to include the silhouette and color scheme of the individual clothing pieces in your description of the recommended outfit.
 You can add more details if you want. Always include a full outfit description from head to legs.
 
-If I have no items in my wardrbe, come up with a creative outfit that fits the vibe.
+Only give ONE outfit.
+Only use items from my wardrobe to propose several complete outfit combinations that perfectly match the requested vibe.
+Only when I have NO items in my wardrobe, come up with a creative outfit that fits the vibe.
 `;
 
 export const createChat = action({
@@ -97,20 +89,20 @@ export const internalGenerateImageAndUpload = internalAction({
 
       const response = await axios.post(
         "https://8000-01jhb59vhfcxaykhbaey8jczqa.cloudspaces.litng.ai/predict",
-        { "input": { "prompt": `${recommendation?.outfitDescription}`, "controlnet_image_url": `${pose?.url}` }},
+        { "input": { "prompt": `Woman, white background,${recommendation?.outfitDescription}`, "controlnet_image_url": `${pose?.url}` }},
         { headers: { "Content-Type": "application/json" }}
       )
 
       if (response.status !== 200) throw new ConvexError("Failed to generate image");
-      
-      const { output } = response.data; // Output only stores the base64 image.
+
+      const { image } = response.data; // Output only stores the base64 image.
       await ctx.runAction(api.chats.utils.uploadBase64Image, {
         userId: args.userId,
         description: recommendation?.outfitDescription || "Error generating outfit description",
         chatId: args.chatId,
         explanation: recommendation?.explanation || "Error generating explanation",
         recommendations: recommendation?.extraRecommendations || "Error generating recommendations",
-        base64Image: output,
+        base64Image: image,
       })
     }
   }

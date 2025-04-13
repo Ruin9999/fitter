@@ -35,11 +35,17 @@ function ImageComponent({ _id, outfit }: { _id: string, outfit: Doc<"outfits"> }
     </DialogTrigger>
     <DialogContent>
       <DialogTitle className="sr-only">Image dialog popup</DialogTitle>
-        <img src={outfit.url} alt={outfit.description} />
+        <img src={outfit.url} className="h-[100px]" alt={outfit.description} />
         <Card>
           <CardContent className='p-4'>
             <p className="font-bold">Recommendation:</p>
             {outfit.recommendations}
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className='p-4'>
+            <p className="font-bold">Description:</p>
+            {outfit.description}
           </CardContent>
         </Card>
     </DialogContent>

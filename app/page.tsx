@@ -1,6 +1,7 @@
 "use client"
 
 import axios from "axios";
+import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
@@ -38,12 +39,14 @@ export default function Main() {
     const file = event.target.files?.[0];
     const uploadUrl = await getUploadUrl();
     if(!file) return;
-
+    
+    toast.info("Uploading image...");
     axios.post(uploadUrl, file, {
       headers: { 'Content-Type': file.type }
     }).then(async (res) => {
       const { storageId } = await res.data;
       await createPose({ userId: user?.id || " ", storageId });
+      toast.success("Image uploaded successfully!");
     }).catch((e) => console.error(e));
   }
 
